@@ -1,0 +1,53 @@
+{
+  "name": "snapyt",
+  "version": "1.0.0",
+  "description": "A modern, open-source YouTube downloader built with Electron.js, featuring a sleek and intuitive desktop interface. Fast and reliable video/audio downloads with a focus on performance and simplicity.",
+  "main": "src/main.js",
+  "homepage": "https://github.com/saadnkhawaja/snapyt---youtube-downloader-electronjs",
+  "author": "Saad Khawaja",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saadnkhawaja/snapyt---youtube-downloader-electronjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/saadnkhawaja/snapyt---youtube-downloader-electronjs/issues"
+  },
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "node scripts/setup-ytdlp.js",
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.snapyt",
+    "productName": "snapyt",
+    "files": [
+      "src/**/*",
+      "bin/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "src/images"
+    },
+    "mac": {
+      "icon": "icon.png"
+    },
+    "win": {
+      "icon": "icon.ico"
+    },
+    "linux": {
+      "icon": "icon.png"
+    }
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.2.0"
+  }
+}

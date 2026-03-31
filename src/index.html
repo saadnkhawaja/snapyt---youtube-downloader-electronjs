@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>snapyt!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    />
+    <link rel="icon" type="image/png" href="images/icon64.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- TITLEBAR -->
+      <div class="titlebar" id="titlebar">
+        <div class="titlebar-drag">
+          <img
+            src="images/icon64.png"
+            alt=""
+            class="titlebar-app-icon"
+            draggable="false"
+          />
+          <span class="titlebar-logo"
+            >snap<span class="logo-yt">yt</span>!</span
+          >
+          <span class="titlebar-sep">-</span>
+          <span class="titlebar-ver">by Saad Khawaja</span>
+        </div>
+        <div class="titlebar-controls">
+          <button
+            class="tb-btn theme"
+            id="themeToggle"
+            title="Switch to dark mode"
+            aria-label="Switch to dark mode"
+          >
+            <i id="themeIcon" class="fa-solid fa-moon" aria-hidden="true"></i>
+          </button>
+          <button class="tb-btn minimize" id="btnMinimize">
+            <i class="fa-solid fa-minus" aria-hidden="true"></i>
+          </button>
+          <button class="tb-btn close" id="btnClose">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="body-wrap">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+          <div class="sidebar-brand">
+            <div class="brand-icon">
+              <img
+                src="images/icon128.png"
+                alt="snapyt! app icon"
+                class="brand-icon-img"
+                draggable="false"
+              />
+            </div>
+            <div class="brand-text">
+              <div class="brand-name">snap<span class="logo-yt">yt</span>!</div>
+              <div class="brand-tag">download in a snap</div>
+            </div>
+          </div>
+
+          <nav class="nav">
+            <button class="nav-item active" data-page="downloader">
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              Download
+            </button>
+            <button class="nav-item" data-page="gallery">
+              <i class="fa-solid fa-photo-film" aria-hidden="true"></i>
+              Library
+            </button>
+            <button class="nav-item" data-page="settings">
+              <i class="fa-solid fa-gear" aria-hidden="true"></i>
+              Settings
+            </button>
+          </nav>
+
+          <div class="sidebar-footer">
+            <div class="sidebar-credits">
+              <button
+                type="button"
+                class="sidebar-signoff sidebar-signoff-link"
+                id="sidebarGithubLink"
+                aria-label="Open snapyt! GitHub repository"
+              >
+                <div class="sidebar-signoff-line">
+                  <span
+                    >made in a
+                    <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+                  </span>
+                </div>
+                <div class="sidebar-signoff-line">by saad khawaja</div>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+          <!-- ========== DOWNLOADER ========== -->
+          <div id="downloader" class="page active">
+            <div class="page-scroll">
+              <!-- PAGE HEADER -->
+              <div class="downloader-head">
+                <div>
+                  <h1 class="pg-title">Download</h1>
+                  <p class="pg-sub">
+                    Download YouTube videos & audio in a snap
+                  </p>
+                </div>
+              </div>
+
+              <!-- URL row -->
+              <div class="url-row">
+                <div class="url-field" id="urlField">
+                  <button class="folder-chip" id="folderChipBtn">
+                    <i class="fa-solid fa-folder-open" aria-hidden="true"></i>
+                    <span id="outputPathLabel">snapyt!</span>
+                  </button>
+                  <div class="url-sep"></div>
+                  <input
+                    type="text"
+                    id="urlInput"
+                    class="url-input"
+                    placeholder="Paste YouTube URL…"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                </div>
+                <button class="fetch-btn" id="fetchBtn">
+                  <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+                  <span>Snapyt!</span>
+                </button>
+              </div>
+
+              <!-- Fetch progress (spinner) -->
+              <div id="fetchProgress" class="fetch-progress hidden">
+                <div class="spinner"></div>
+                <span id="fetchProgressLabel">Fetching video information…</span>
+              </div>
+
+              <!-- Video preview card -->
+              <div id="videoCard" class="video-card hidden">
+                <button
+                  type="button"
+                  class="vc-close"
+                  id="closeVideoCardBtn"
+                  aria-label="Close fetched video details"
+                  title="Close"
+                >
+                  <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+                <div class="vc-thumb-col">
+                  <div class="vc-thumb-wrap">
+                    <img id="videoThumb" src="" alt="" class="vc-thumb" />
+                    <span id="videoDurationBadge" class="vc-duration"></span>
+                  </div>
+                </div>
+                <div class="vc-details">
+                  <div class="vc-title" id="videoTitle"></div>
+                  <div class="vc-author" id="videoAuthor"></div>
+
+                  <div class="vc-options">
+                    <div class="opt-row">
+                      <span class="opt-label">Quality</span>
+                      <div class="opt-pills" id="qualityPills">
+                        <span class="pills-status"
+                          >Fetch a video to load available qualities</span
+                        >
+                      </div>
+                    </div>
+                    <div class="opt-row" id="formatRow">
+                      <span class="opt-label">Format</span>
+                      <div class="opt-pills" id="formatPills">
+                        <button class="pill active" data-format="mp4">
+                          MP4
+                        </button>
+                        <button class="pill" data-format="mkv">MKV</button>
+                        <button class="pill" data-format="webm">WebM</button>
+                        <button class="pill audio-pill" data-format="audio">
+                          <i class="fa-solid fa-music" aria-hidden="true"></i>
+                          Audio
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="vc-actions">
+                    <button class="btn-queue" id="addToQueueBtn" disabled>
+                      <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+                      Add to Queue
+                    </button>
+                    <button class="btn-download" id="downloadBtn" disabled>
+                      <i class="fa-solid fa-download" aria-hidden="true"></i>
+                      Start Download
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Queue section -->
+              <div id="queueSection" class="queue-section hidden">
+                <div class="sec-hd">
+                  <span class="sec-title">Queue</span>
+                  <span id="queueCount" class="sec-badge">0</span>
+                  <button class="sec-clear" id="clearQueueBtn">Clear</button>
+                </div>
+                <div id="queueList" class="queue-list"></div>
+              </div>
+
+              <!-- Downloads section -->
+              <div class="downloads-section">
+                <div class="sec-hd">
+                  <span class="sec-title">Recent Downloads</span>
+                  <span id="activeCount" class="sec-badge hidden"
+                    >0 active</span
+                  >
+                  <button class="sec-clear" id="clearCompletedBtn">
+                    Clear list
+                  </button>
+                </div>
+                <div class="downloads-scroll-shell" id="downloadsScrollShell">
+                  <div class="downloads-scroll" id="downloadsScroll">
+                    <div
+                      class="downloads-scroll-content"
+                      id="downloadsScrollContent"
+                    >
+                      <div id="downloadsList" class="downloads-list"></div>
+                      <div id="downloadsEmpty" class="dl-empty hidden">
+                        <i class="fa-solid fa-download" aria-hidden="true"></i>
+                        <p>No downloads yet</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="panel-scrollbar"
+                    id="downloadsScrollbar"
+                    aria-hidden="true"
+                  >
+                    <div
+                      class="panel-scrollbar-thumb"
+                      id="downloadsScrollbarThumb"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /downloader -->
+
+          <!-- ========== GALLERY ========== -->
+          <div id="gallery" class="page">
+            <div class="page-scroll">
+              <div class="gallery-head">
+                <div>
+                  <h1 class="pg-title">Library</h1>
+                  <p class="pg-sub">All your saved media</p>
+                </div>
+              </div>
+
+              <!-- Gallery controls -->
+              <div class="gallery-controls">
+                <div class="g-search-wrap">
+                  <i
+                    class="fa-solid fa-magnifying-glass g-search-icon"
+                    aria-hidden="true"
+                  ></i>
+                  <input
+                    type="text"
+                    id="gallerySearch"
+                    placeholder="Search…"
+                    class="g-search-input"
+                  />
+                </div>
+                <div class="g-filters">
+                  <button class="g-filter active" data-filter="all">All</button>
+                  <button class="g-filter" data-filter="video">Video</button>
+                  <button class="g-filter" data-filter="audio">Audio</button>
+                </div>
+                <div class="g-sort">
+                  <button
+                    type="button"
+                    id="gallerySortTrigger"
+                    class="g-sort-select"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                  >
+                    <span id="gallerySortLabel">Newest first</span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                  </button>
+                  <div
+                    id="gallerySortMenu"
+                    class="g-sort-menu hidden"
+                    role="listbox"
+                  >
+                    <button
+                      class="g-sort-item active"
+                      data-sort="date-desc"
+                      role="option"
+                      aria-selected="true"
+                    >
+                      Newest first
+                    </button>
+                    <button
+                      class="g-sort-item"
+                      data-sort="date-asc"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      Oldest first
+                    </button>
+                    <button
+                      class="g-sort-item"
+                      data-sort="name-asc"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      Name A-Z
+                    </button>
+                    <button
+                      class="g-sort-item"
+                      data-sort="name-desc"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      Name Z-A
+                    </button>
+                    <button
+                      class="g-sort-item"
+                      data-sort="size-desc"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      Largest first
+                    </button>
+                    <button
+                      class="g-sort-item"
+                      data-sort="duration-desc"
+                      role="option"
+                      aria-selected="false"
+                    >
+                      Longest first
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gallery table -->
+              <div class="gallery-table-shell" id="galleryTableShell">
+                <div class="gallery-table-wrap" id="galleryTableScroll">
+                  <div class="gallery-table-content" id="galleryTableContent">
+                    <table class="gallery-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 42px"></th>
+                          <th style="width: 88px">Preview</th>
+                          <th style="width: 32%">Title</th>
+                          <th style="width: 72px">Type</th>
+                          <th style="width: 72px">Duration</th>
+                          <th style="width: 72px">Size</th>
+                          <th style="width: 124px">Downloaded on</th>
+                        </tr>
+                      </thead>
+                      <tbody id="galleryTableBody"></tbody>
+                    </table>
+                    <div id="galleryEmpty" class="g-empty hidden">
+                      <i class="fa-solid fa-photo-film" aria-hidden="true"></i>
+                      <p>No videos yet</p>
+                      <span
+                        >Download your first video from the Download tab</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="panel-scrollbar"
+                  id="galleryScrollbar"
+                  aria-hidden="true"
+                >
+                  <div
+                    class="panel-scrollbar-thumb"
+                    id="galleryScrollbarThumb"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="library-footer">
+                <div class="library-bulk-actions">
+                  <button
+                    type="button"
+                    class="library-bulk-btn"
+                    id="librarySelectAllBtn"
+                  >
+                    Select all
+                  </button>
+                  <button
+                    type="button"
+                    class="library-bulk-btn"
+                    id="libraryClearSelectionBtn"
+                    disabled
+                  >
+                    Unselect all
+                  </button>
+                  <button
+                    type="button"
+                    class="library-delete-btn"
+                    id="libraryDeleteSelectedBtn"
+                    disabled
+                  >
+                    Delete 0 videos
+                  </button>
+                </div>
+
+                <!-- Gallery pagination -->
+                <div id="galleryPagination" class="g-pagination hidden">
+                  <button class="g-page-btn" id="galPrevBtn">
+                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                  </button>
+                  <span id="galPageLabel" class="g-page-label"
+                    >Page 1 of 1</span
+                  >
+                  <button class="g-page-btn" id="galNextBtn">
+                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /gallery -->
+
+          <!-- ========== SETTINGS ========== -->
+          <div id="settings" class="page">
+            <div class="settings-scroll-shell" id="settingsScrollShell">
+              <div class="page-scroll" id="settingsScroll">
+                <div class="settings-scroll-content" id="settingsScrollContent">
+                  <div class="page-hd">
+                    <h1 class="pg-title">Settings</h1>
+                    <p class="pg-sub">Configure your download preferences</p>
+                  </div>
+
+                  <div class="settings-section">
+                    <h4 class="settings-sec-title">Storage &amp; Output</h4>
+                    <div class="settings-card">
+                      <div class="settings-row">
+                        <div>
+                          <div class="sr-label">Default Output Folder</div>
+                          <div class="sr-value" id="settingsOutputPath"></div>
+                        </div>
+                        <button class="btn-outline-sm" id="changePathBtn">
+                          Change
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-section">
+                    <h4 class="settings-sec-title">Encoding Preferences</h4>
+                    <div class="settings-grid">
+                      <div class="settings-card">
+                        <div class="sr-label" style="margin-bottom: 12px">
+                          Default Format
+                        </div>
+                        <div class="opt-pills">
+                          <button
+                            class="pill active"
+                            data-pref="format"
+                            data-value="mp4"
+                          >
+                            MP4
+                          </button>
+                          <button
+                            class="pill"
+                            data-pref="format"
+                            data-value="mkv"
+                          >
+                            MKV
+                          </button>
+                          <button
+                            class="pill"
+                            data-pref="format"
+                            data-value="webm"
+                          >
+                            WebM
+                          </button>
+                          <button
+                            class="pill"
+                            data-pref="format"
+                            data-value="audio"
+                          >
+                            Audio
+                          </button>
+                        </div>
+                      </div>
+                      <div class="settings-card">
+                        <div class="sr-label" style="margin-bottom: 12px">
+                          Default Quality
+                        </div>
+                        <div class="opt-pills">
+                          <button
+                            class="pill active"
+                            data-pref="quality"
+                            data-value="best"
+                          >
+                            Best
+                          </button>
+                          <button
+                            class="pill"
+                            data-pref="quality"
+                            data-value="1080"
+                          >
+                            1080p
+                          </button>
+                          <button
+                            class="pill"
+                            data-pref="quality"
+                            data-value="720"
+                          >
+                            720p
+                          </button>
+                          <button
+                            class="pill"
+                            data-pref="quality"
+                            data-value="480"
+                          >
+                            480p
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-section">
+                    <h4 class="settings-sec-title">Clipboard</h4>
+                    <div class="settings-card">
+                      <div class="settings-row">
+                        <div>
+                          <div class="sr-label">Auto Clipboard Fetch</div>
+                          <div class="sr-sub">
+                            Automatically paste a copied YouTube link into the
+                            Download input and fetch it right away
+                          </div>
+                        </div>
+                        <label class="toggle">
+                          <input
+                            type="checkbox"
+                            id="autoClipboardToggle"
+                            checked
+                          />
+                          <span class="toggle-track"
+                            ><span class="toggle-thumb"></span
+                          ></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-section">
+                    <h4 class="settings-sec-title">Auto Start</h4>
+                    <div class="settings-card">
+                      <div class="settings-row">
+                        <div>
+                          <div class="sr-label">Auto Start Downloads</div>
+                          <div class="sr-sub">
+                            When clipboard auto-fetch is enabled, copied YouTube
+                            links can start downloading immediately with no
+                            confirmation needed
+                          </div>
+                        </div>
+                        <label class="toggle">
+                          <input type="checkbox" id="autoStartToggle" />
+                          <span class="toggle-track"
+                            ><span class="toggle-thumb"></span
+                          ></span>
+                        </label>
+                      </div>
+                      <!-- Auto Start quality/format options — shown only when toggle is on -->
+                      <div
+                        id="autoStartOptions"
+                        class="auto-start-options hidden"
+                      >
+                        <div class="auto-start-divider"></div>
+                        <div class="opt-row">
+                          <span class="opt-label">Quality</span>
+                          <div class="opt-pills" id="autoStartQualityPills">
+                            <button class="pill active" data-as-quality="best">
+                              Best
+                            </button>
+                            <button class="pill" data-as-quality="1080">
+                              1080p
+                            </button>
+                            <button class="pill" data-as-quality="720">
+                              720p
+                            </button>
+                            <button class="pill" data-as-quality="480">
+                              480p
+                            </button>
+                            <button class="pill" data-as-quality="360">
+                              360p
+                            </button>
+                          </div>
+                        </div>
+                        <div class="opt-row" style="margin-top: 8px">
+                          <span class="opt-label">Format</span>
+                          <div class="opt-pills" id="autoStartFormatPills">
+                            <button class="pill active" data-as-format="mp4">
+                              MP4
+                            </button>
+                            <button class="pill" data-as-format="mkv">
+                              MKV
+                            </button>
+                            <button class="pill" data-as-format="webm">
+                              WebM
+                            </button>
+                            <button class="pill" data-as-format="audio">
+                              Audio
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-section">
+                    <h4 class="settings-sec-title">System</h4>
+                    <div class="settings-card">
+                      <div class="settings-row">
+                        <div>
+                          <div class="sr-label">
+                            Check for updates automatically
+                          </div>
+                          <div class="sr-sub">
+                            Keep snapy-yt running at peak performance
+                          </div>
+                        </div>
+                        <label class="toggle">
+                          <input
+                            type="checkbox"
+                            id="autoUpdateToggle"
+                            checked
+                          />
+                          <span class="toggle-track"
+                            ><span class="toggle-thumb"></span
+                          ></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button class="btn-save" id="saveSettingsBtn">
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+              <div
+                class="settings-scrollbar"
+                id="settingsScrollbar"
+                aria-hidden="true"
+              >
+                <div
+                  class="settings-scrollbar-thumb"
+                  id="settingsScrollbarThumb"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <!-- /settings -->
+        </main>
+      </div>
+
+      <!-- FAB -->
+      <button class="fab" id="fabBtn" title="New Download">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      </button>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
